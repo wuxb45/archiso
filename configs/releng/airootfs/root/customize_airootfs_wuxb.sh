@@ -13,6 +13,7 @@ chmod 700 /root
 
 sed -i 's/#\(PermitRootLogin \)no/\1yes/' /etc/ssh/sshd_config
 #sed -i "s/#Server/Server/g" /etc/pacman.d/mirrorlist
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.origin
 echo 'Server = http://fbhead/mirror/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist
 sed -i 's/#\(Storage=\)auto/\1volatile/' /etc/systemd/journald.conf
 
