@@ -1,0 +1,51 @@
+#### Build my own iso and set pxe boot.
+==1==
+in configs/releng/
+> ./build.sh -v
+
+-> You get an iso file in configs/releng/out/
+
+==2==
+Extrace /arch/ from the iso file to your PXE dir
+(OR just use the dir configs/releng/work/iso/arch)
+suppose it's /pxe (like /pxe/arch/...)
+
+==3==
+edit /etc/dnsmasq.conf and /etc/nginx/nginx.conf
+
+#### dnsmasq (replace XXX with real parameters):
+resolv-file=/etc/resolv.dnsmasq.conf
+# the listening interface
+interface=XXX
+bind-interfaces
+# start,end,expiretime
+dhcp-range=10.255.255.0,10.255.255.250,48h
+enable-tftp
+# the PXE dir
+tftp-root=/pxe
+# just like this
+dhcp-boot=/arch/boot/syslinux/lpxelinux.0
+# set default dns which is this machine's ip
+dhcp-option=6,XXX
+## /pxe/arch/boot/syslinux/bypasspxe.cfg
+dhcp-option-force=209,boot/syslinux/bypasspxe.cfg
+dhcp-option-force=210,/arch/
+# read /etc/ethers
+read-ethers
+
+
+#### nginx:
+
+http {
+...
+  server {
+    ...
+    location /pxe {
+      alias /pxe;
+      autoindex on; 
+    }
+  }
+}
+
+
+
