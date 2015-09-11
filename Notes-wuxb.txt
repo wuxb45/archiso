@@ -1,3 +1,6 @@
+==0==
+pacman -S archiso
+
 #### Build my own iso and set pxe boot.
 ==1==
 in configs/releng/
