@@ -6,17 +6,15 @@ pacman -S archiso
 in configs/releng/
 > ./build.sh -v
 
--> You get an iso file in configs/releng/out/
-
 ==2==
-Extrace /arch/ from the iso file to your PXE dir
-(OR just use the dir configs/releng/work/iso/arch)
-suppose it's /pxe (like /pxe/arch/...)
+sync new files into the /pxe dir:
+in configs/releng/
+> ./pxeupdate.sh
 
 ==3==
 edit /etc/dnsmasq.conf and /etc/nginx/nginx.conf
 
-#### dnsmasq (replace XXX with real parameters):
+#### BEGIN /etc/dnsmasq.conf (replace XXX with real parameters)
 resolv-file=/etc/resolv.dnsmasq.conf
 # the listening interface
 interface=XXX
@@ -35,20 +33,17 @@ dhcp-option-force=209,boot/syslinux/bypasspxe.cfg
 dhcp-option-force=210,/arch/
 # read /etc/ethers
 read-ethers
+#### END /etc/dnsmasq.conf
 
-
-#### nginx:
-
+#### BEGIN /etc/nginx/nginx.conf
 http {
-...
+  ## ...
   server {
-    ...
+    ## ...
     location /pxe {
       alias /pxe;
       autoindex on; 
     }
   }
 }
-
-
-
+#### END /etc/nginx/nginx.conf
